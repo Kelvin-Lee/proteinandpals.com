@@ -5,10 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-require('./models/Posts');
-require('./models/Comments');
+require('./models/Users');
 
-mongoose.connect('mongodb://localhost/news');
+mongoose.connect('mongodb://localhost/weights'); //the extension after 'localhost' will dictate which db we get our info from. The original tutorial was stored in 'localhost/news'. Changing this to e.g. 'localhost/poop' will end up rendering a website with no existing posts
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

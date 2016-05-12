@@ -1,81 +1,40 @@
-var app = angular.module('flapperNews', ['ui.router']);
+var app = angular.module('weights', ['ui.router']);
 
-app.controller('MainCtrl', [ '$scope', 'posts', function($scope, posts){
-
-  $scope.posts = posts.posts;
-
-  $scope.incrementUpvotes = function(post) {
-    posts.upvote(post);
-  };
-
-  $scope.addPost = function(){
-    if(!$scope.title || $scope.title === '') { return; }
-    posts.create({
-      title: $scope.title,
-      link: $scope.link,
+app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope, users, usersPromise){
+  $scope.users = users.users;
+  $scope.addUser = function(){
+    users.create({
+      name: $scope.name 
+    }).success(function(){
+      $scope.name = '';
     });
-    $scope.title = '';
-    $scope.link= '';
   };
 
 }]);
 
-app.controller('PostsCtrl', [ '$scope', 'posts', 'post', function($scope, posts, post){
-  $scope.post = post;
-
-  $scope.addComment = function(){
-    if($scope.body === '') { return; }
-    posts.addComment(post._id, {
-      body: $scope.body,
-      author: 'user',
-    }).success(function(comment){
-      $scope.post.comments.push(comment);
-    });
-    $scope.body = '';
-  };
-  $scope.incrementUpvotes = function(comment){
-    posts.upvoteComment(post, comment);
-  }
+app.controller('UserCtrl', ['$scope', 'user', function($scope, user){
+  $scope.user = user;
 }]);
 
-app.factory('posts', ['$http', function($http){
+app.factory('users', ['$http', function($http){
   var o = {
-    posts: [
-      {title: 'post 1', upvotes: 5},
-      {title: 'post 2', upvotes: 2},
-      {title: 'post 3', upvotes: 15},
-      {title: 'post 4', upvotes: 9},
-      {title: 'post 5', upvotes: 4}
-    ],
-    getAll: function(){
-      return $http.get('/posts').success(function(data){
-        angular.copy(data, o.posts);
+    users: [],
+    getAll: function(){ // Get all the users from the DB
+      return $http.get('/users').success(function(data){
+        angular.copy(data, o.users); //Copy it to the 'client side' version
 	});
     },
-    create: function(post){
-      return $http.post('/posts', post).success(function(data){
-        o.posts.push(data);
-      });
-    },
-    upvote: function(post){
-      return $http.put('/posts/' + post._id + '/upvote').success(function(data){
-        post.upvotes += 1;
+    create: function(user){ 
+    //create new user; takes a JSON object, who's data is linked to the $scope
+      return $http.post('/users', user).success(function(data){
+        o.users.push(data); //data is a res.json() of the model instance/document of the new user
       });
     },
     get: function(id){
-      return $http.get('/posts/' + id).then(function(res){
+      return $http.get('/users/' + id).then(function(res){
         return res.data;
       });
     },
-    addComment: function(id, comment){
-      return $http.post('/posts/' + id + '/comments', comment);
-    },
-    upvoteComment: function(post, comment){
-      return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote')
-        .success(function(data){
-	  comment.upvotes += 1;
-      });
-    }
   };
   return o;
 }]);
@@ -88,20 +47,21 @@ app.config([ '$stateProvider', '$urlRouterProvider', function($stateProvider, $u
       templateUrl: '/home.html',
       controller: 'MainCtrl',
       resolve: {
-        postPromise: ['posts', function(posts){
-	  return posts.getAll();
-        }]
+        usersPromise: ['users', function(users){
+          return users.getAll();
+	}]
       }
     })
-    .state('posts', {
-      url: '/posts/{id}',
-      templateUrl: '/posts.html',
-      controller: 'PostsCtrl',
-      resolve: { // "The Angular ui-router detects we are entering the `posts` state and will then automatically query the server for the full post object, including `comments`. Only after the reqest has returned wil the state finish loading.
-        post: ['$stateParams', 'posts', function($stateParams, posts){
-	  return posts.get($stateParams.id);
-	  }]
-      }
+    // "The Angular ui-router detects we are entering the `posts` state and will then automatically query the server for the full post object, including `comments`. Only after the reqest has returned wil the state finish loading.
+    .state('users', {
+      url: '/users/{id}',
+      templateUrl: '/user.html',
+      controller: 'UserCtrl',
+      resolve: {
+        user: ['$stateParams', 'users', function($stateParams, users){ 
+	  return users.get($stateParams.id);
+	}]
+      },
     });
 
   $urlRouterProvider.otherwise('home');

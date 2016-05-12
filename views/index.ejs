@@ -6,8 +6,9 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
   <script src="/javascripts/angularApp.js"></script>
   <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+  <style> #silly > img { height: 200px; width: 200px; } </style>
 </head>
-<body ng-app="flapperNews">
+<body ng-app="weights">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <ui-view></ui-view>
@@ -15,77 +16,57 @@
   </div>
   <script type="text/ng-template" id="/home.html">
     <div class="page-header">
-      <h1>Flapper News</h1>
+      <h1>GAINS!!!</h1>
     </div>
-    <div ng-repeat="post in posts | orderBy:'-upvotes'">
-      <span class="glyphicon glyphicon-thumbs-up"
-        ng-click="incrementUpvotes(post)"></span>
-      {{post.upvotes}}
-      <span style="font-size:20px; margin-left:10px;">
-        <a ng-show="post.link" href="{{post.link}}">
-          {{post.title}}
-        </a>
-	<span>
-          <a href="#/posts/{{post._id}}">Comments</a>
-        </span>
-        <span ng-hide="post.link">
-          {{post.title}}
-        </span>
-      </span>
+    <div id="silly">
+      <img src="./images/squat.png">
+      <img src="./images/bench.png">
+      <img src="./images/deadlift.png">
+      <img src="./images/barbellrow.png">
+      <img src="./images/shoulderpress.png">
     </div>
-
-    <form ng-submit="addPost()"
-      style="margin-top:30px;">
-      <h3>Add a new post</h3>
-
-      <div class="form-group">
-        <input type="text"
-          class="form-control"
-          placeholder="Title"
-          ng-model="title"></input>
-      </div>
-      <div class="form-group">
-        <input type="text"
-        class="form-control"
-        placeholder="Link"
-        ng-model="link"></input>
-      </div>
-      <button type="submit" class="btn btn-primary">Post</button>
+    <div ng-show="users.length" ng-repeat="user in users track by $index">
+      <a href="#/users/{{user._id}}">{{user.name}}</a>
+    </div>
+    <form ng-submit="addUser()">
+      <input type="text" ng-model="name" placeholder="Your name?"></input>
+      <button type="submit">Go!</button>
     </form>
+    <div ng-show="!users.length">
+      No users :S
+    </div>
   </script>
-  <script type="text/ng-template" id="/posts.html">
+  <script type="text/ng-template" id="/user.html">
     <div class="page-header">
-      <h3>
-        <a ng-show="post.link" href="{{post.link}}">
-          {{post.title}}
-        </a>
-        <span ng-hide="post.link">
-          {{post.title}}
-        </span>
-      </h3>
+      <h3>User Page</h3>
     </div>
-  
-    <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
-      <span class="glyphicon glyphicon-thumbs-up"
-        ng-click="incrementUpvotes(comment)"></span>
-      {{comment.upvotes}} - by {{comment.author}}
-      <span style="font-size:20px; margin-left:10px;">
-        {{comment.body}}
-      </span>
+    <div>
+      Hey there {{user.name}}! How's it going?
     </div>
-    <form ng-submit="addComment()"
-      style="margin-top:30px;">
-      <h3>Add a new comment</h3>
-
-      <div class="form-group">
-        <input type="text"
-        class="form-control"
-        placeholder="Comment"
-        ng-model="body"></input>
-      </div>
-      <button type="submit" class="btn btn-primary">Post</button>
-    </form>
+    <h3>Stats</h3>
+    <div id="stats">
+      <table class="table">
+	  <td>Squat</td>
+          <td>{{user.squat}}</td>
+        </tr>
+        <tr>
+	  <td>Bench</td>
+          <td>{{user.bench}}</td>
+        </tr>
+        <tr>
+	  <td>Deadlift</td>
+          <td>{{user.deadlift}}</td>
+        </tr>
+        <tr>
+	  <td>Barbell Row</td>
+          <td>{{user.barbellrow}}</td>
+        </tr>
+        <tr>
+	  <td>Shoulder Press</td>
+          <td>{{user.shoulderpress}}</td>
+        </tr>
+      </table>
+    </div>
   </script>
-</script>
 </body>
 </html>
