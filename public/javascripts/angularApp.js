@@ -9,10 +9,22 @@ app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope,
       $scope.name = '';
     });
   };
+  $scope.removeUser= function(){
+
+  };
 
 }]);
 
 app.controller('UserCtrl', ['$scope', 'user', function($scope, user){
+  $scope.user = user;
+
+  $scope.editUserNumbers = function(){
+    //make a post request to the mongo db instance, sending in the USER object
+  };
+
+}]);
+
+app.controller('EditUserCtrl', ['$scope', 'user', function($scope, user){
   $scope.user = user;
 }]);
 
@@ -35,6 +47,9 @@ app.factory('users', ['$http', function($http){
         return res.data;
       });
     },
+    remove: function(){
+      //http
+    },
   };
   return o;
 }]);
@@ -52,11 +67,20 @@ app.config([ '$stateProvider', '$urlRouterProvider', function($stateProvider, $u
 	}]
       }
     })
-    // "The Angular ui-router detects we are entering the `posts` state and will then automatically query the server for the full post object, including `comments`. Only after the reqest has returned wil the state finish loading.
     .state('users', {
       url: '/users/{id}',
       templateUrl: '/user.html',
       controller: 'UserCtrl',
+      resolve: {
+        user: ['$stateParams', 'users', function($stateParams, users){ 
+	  return users.get($stateParams.id);
+	}]
+      },
+    })
+    .state('edituser', {
+      url: '/users/{id}/edit',
+      templateUrl: '/edit.html',
+      controller: 'EditUserCtrl',
       resolve: {
         user: ['$stateParams', 'users', function($stateParams, users){ 
 	  return users.get($stateParams.id);

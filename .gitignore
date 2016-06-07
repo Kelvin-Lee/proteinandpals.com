@@ -1,2 +1,15 @@
+# node_modules
 node_modules
+
+# logs
 npm-debug.log
+
+# itself
+.gitignore
+
+# vim
+*~
+*.swp
+
+# .txt
+*.txt

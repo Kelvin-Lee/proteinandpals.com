@@ -9,6 +9,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/users/:user/edit', function(req, res, next){ //Render edit.html
+  console.log("EventQ. router.get('/users/:user/edit'...)");
+  res.send(req.user);
+});
+
+
 router.get('/users/:user', function(req, res, next){ //Render user.html
   console.log("EventZ. router.get('/users/:user'...)");
   res.send(req.user);
