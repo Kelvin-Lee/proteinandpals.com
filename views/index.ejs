@@ -43,30 +43,19 @@
       <h3>User Page</h3>
     </div>
     <div>
-      Hey there {{user.name}}! How's it going?
+      Hey there <strong>{{user.name}}</strong>! How's it going?
     </div>
     <h3>Stats</h3>
-    <div id="stats">
-      <table class="table">
-	  <td>Squat</td>
-          <td>{{user.squat}}</td>
-        </tr>
-        <tr>
-	  <td>Bench</td>
-          <td>{{user.bench}}</td>
-        </tr>
-        <tr>
-	  <td>Deadlift</td>
-          <td>{{user.deadlift}}</td>
-        </tr>
-        <tr>
-	  <td>Barbell Row</td>
-          <td>{{user.barbellrow}}</td>
-        </tr>
-        <tr>
-	  <td>Shoulder Press</td>
-          <td>{{user.shoulderpress}}</td>
-        </tr>
+    <div id="user_stats">
+      <table id="user_lifts" class="table">
+          <tr>
+            <th>Exercise</th>
+            <th>Number in PWNS</th>
+          </tr>
+          <tr ng-repeat="(lift, number) in user.lifts">
+            <td ng-if="lift !== '_id'">{{lift}}</td>
+            <td ng-if="lift !== '_id'">{{number}}</td>
+          </tr>
       </table>
       <a href="#/users/{{user._id}}/edit">Edit your stats</a>
     </div>
@@ -75,35 +64,18 @@
     <div class="page-header">
       <h1>Edit your stats!</h1>
     </div>
-    <div>
-    </form>
-      <form ng-submit="editUserNumbers()">
-        <table class="table">
-	  <tr>
-	    <th>Exercise</th>
-	    <th>Weight in PWNS (increments of 2.5)</th>
-	  </tr>
-	  <tr>
-            <td><label>Squat</label></td>
-	    <td><input type="number" min="0" max="500" step="2.5" ng-model="squat" placeholder="{{user.squat}}"></input></td>
-	  </tr>
-	  <tr>
-            <td><label>Deadlift</label></td>
-	    <td><input type="number" min="0" max="500" step="2.5" ng-model="deadlift" placeholder="{{user.deadlift}}"></input></td>
-	  </tr>
-	  <tr>
-            <td><label>Barbellrow</label></td>
-	    <td><input type="number" min="0" max="500" step="2.5" ng-model="barbellrow" placeholder="{{user.barbellrow}}"></input></td>
-	  </tr>
-	  <tr>
-            <td><label>Shoulder Press</label></td>
-	    <td><input type="number" min="0" max="500" step="2.5" ng-model="shoulderpress" placeholder="{{user.shoulderpress}}"></input></td>
-	  </tr>
-	  <tr>
-            <td><label>Bench</label></td>
-	    <td><input type="number" min="0" max="500" step="2.5" ng-model="bench" placeholder="{{user.bench}}"></input></td>
-	  </tr>
-	</table>
+    <div id="user_stats">
+      <form ng-submit="putLifts(user._id)">
+        <table id="user_lifts" class="table">
+            <tr>
+              <th>Exercise</th>
+              <th>Number in PWNS</th>
+            </tr>
+            <tr ng-repeat="(lift, number) in user.lifts">
+              <td ng-if="lift !== '_id'">{{lift}}</td>
+              <td ng-if="lift !== '_id'"><input type="number" min="0" max="500" step="2.5" placeholder={{number}}></input></td>
+            </tr>
+        </table>
         <button type="submit">Submit changes!</button>
       </form>
     </div>

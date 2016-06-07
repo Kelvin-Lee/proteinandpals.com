@@ -1,7 +1,9 @@
 var app = angular.module('weights', ['ui.router']);
 
 app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope, users, usersPromise){
+
   $scope.users = users.users;
+
   $scope.addUser = function(){
     users.create({
       name: $scope.name 
@@ -17,15 +19,22 @@ app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope,
 
 app.controller('UserCtrl', ['$scope', 'user', function($scope, user){
   $scope.user = user;
-
-  $scope.editUserNumbers = function(){
-    //make a post request to the mongo db instance, sending in the USER object
-  };
-
+  console.log(user);
 }]);
 
 app.controller('EditUserCtrl', ['$scope', 'user', function($scope, user){
   $scope.user = user;
+
+  $scope.putLifts= function(id){
+  console.log(id) // TODO: Determine architecture choice: should user have its own factory within the EditUserCtrl? Study the other `users` factory, and see if it's appropriate...
+  /*
+    $http({
+      method: "PUT",
+      url: "/users/" + id + "/edit"
+    });
+  */
+  };
+
 }]);
 
 app.factory('users', ['$http', function($http){
@@ -47,9 +56,7 @@ app.factory('users', ['$http', function($http){
         return res.data;
       });
     },
-    remove: function(){
-      //http
-    },
+
   };
   return o;
 }]);

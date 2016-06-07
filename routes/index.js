@@ -14,6 +14,10 @@ router.get('/users/:user/edit', function(req, res, next){ //Render edit.html
   res.send(req.user);
 });
 
+router.put('/users/:user/edit', function (req, res, next){
+  console.log("EventK. router.put('/users/:user/edit'");
+  res.send();
+});
 
 router.get('/users/:user', function(req, res, next){ //Render user.html
   console.log("EventZ. router.get('/users/:user'...)");
