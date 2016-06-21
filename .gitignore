@@ -13,3 +13,6 @@ npm-debug.log
 
 # .txt
 *.txt
+
+# index.html (used only for syntax highlighting in VIM)
+views/index.html
