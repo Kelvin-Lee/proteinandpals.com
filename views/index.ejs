@@ -5,7 +5,6 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
   <script src="/javascripts/angularApp.js"></script>
-  <style> .glyphicon-thumbs-up { cursor:pointer } </style>
   <style> #silly > img { height: 200px; width: 200px; } </style>
 </head>
 <body ng-app="weights">
@@ -52,12 +51,15 @@
             <th>Exercise</th>
             <th>Number in PWNS</th>
           </tr>
-          <tr ng-repeat="(lift, number) in user.lifts">
-            <td ng-if="lift !== '_id'">{{lift}}</td>
-            <td ng-if="lift !== '_id'">{{number}}</td>
+          <tr ng-repeat="lift in user.lifts">
+            <td ng-if="lift !== '_id'">{{lift.name}}</td>
+            <td ng-if="lift !== '_id'">{{lift.value}}</td>
           </tr>
       </table>
-      <a href="#/users/{{user._id}}/edit">Edit your stats</a>
+    </div>
+    <div>
+      <a href="#/users/{{user._id}}/edit">Edit your stats</a><br>
+      <a href="#/">Back to Main</a>
     </div>
   </script>
   <script type="text/ng-template" id="/edit.html">
@@ -71,13 +73,16 @@
               <th>Exercise</th>
               <th>Number in PWNS</th>
             </tr>
-            <tr ng-repeat="(lift, number) in user.lifts">
-              <td ng-if="lift !== '_id'">{{lift}}</td>
-              <td ng-if="lift !== '_id'"><input type="number" min="0" max="500" step="2.5" placeholder={{number}}></input></td>
+            <tr ng-repeat="lift in user.lifts">
+              <td ng-if="lift !== '_id'" ng-model="lift.name">{{lift.name}}</td>
+              <td ng-if="lift !== '_id'"><input type="number" min="0" max="500" step="2.5" placeholder={{lift.value}} ng-model="lift.value"></input></td>
             </tr>
         </table>
         <button type="submit">Submit changes!</button>
       </form>
+      <div>
+        <a href="#/users/{{user._id}}"><- Back to your page</a>
+      </div>
     </div>
   </script>
 </body>

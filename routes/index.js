@@ -9,14 +9,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/users/:user/edit', function(req, res, next){ //Render edit.html
-  console.log("EventQ. router.get('/users/:user/edit'...)");
-  res.send(req.user);
-});
-
-router.put('/users/:user/edit', function (req, res, next){
-  console.log("EventK. router.put('/users/:user/edit'");
-  res.send();
+router.put('/users/:user', function (req, res, next){
+  console.log("EventK. router.put('/users/:user'");
+  User.findByIdAndUpdate(req.user._id, { $set: {lifts: req.body}}, function(err, user){
+    if(err){return;} //TODO: actual error handler
+    res.send(user); //TODO: see if we really need to res.send the user
+  });
 });
 
 router.get('/users/:user', function(req, res, next){ //Render user.html

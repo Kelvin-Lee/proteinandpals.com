@@ -1,6 +1,6 @@
 var app = angular.module('weights', ['ui.router']);
 
-app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope, users, usersPromise){
+app.controller('MainCtrl', [ '$scope', 'users', function($scope, users){
 
   $scope.users = users.users;
 
@@ -18,37 +18,49 @@ app.controller('MainCtrl', [ '$scope', 'users', 'usersPromise', function($scope,
 }]);
 
 app.controller('UserCtrl', ['$scope', 'user', function($scope, user){
-  $scope.user = user;
-  console.log(user);
+  $scope.user = user.user;
 }]);
 
 app.controller('EditUserCtrl', ['$scope', 'user', function($scope, user){
-  $scope.user = user;
 
-  $scope.putLifts= function(id){
-  console.log(id) // TODO: Determine architecture choice: should user have its own factory within the EditUserCtrl? Study the other `users` factory, and see if it's appropriate...
-  /*
-    $http({
-      method: "PUT",
-      url: "/users/" + id + "/edit"
-    });
-  */
+  $scope.user = user.user;
+
+  $scope.putLifts = function(id){
+    user.putLifts(id, $scope.user.lifts);
   };
 
 }]);
 
+
+app.factory('user', ['$http', function($http){
+  var o = {
+    user: {},
+    get: function(id){
+      return $http.get('/users/' + id).success(function(data){
+        angular.copy(data, o.user);
+      });
+    },
+    putLifts: function(id, arr){
+      return $http.put('/users/' + id, arr).success(function(res){
+        return res.data;
+      });
+    },
+  };
+  return o;
+}])
+
+
 app.factory('users', ['$http', function($http){
   var o = {
     users: [],
-    getAll: function(){ // Get all the users from the DB
+    getAll: function(){
       return $http.get('/users').success(function(data){
-        angular.copy(data, o.users); //Copy it to the 'client side' version
+        angular.copy(data, o.users);
 	});
     },
     create: function(user){ 
-    //create new user; takes a JSON object, who's data is linked to the $scope
       return $http.post('/users', user).success(function(data){
-        o.users.push(data); //data is a res.json() of the model instance/document of the new user
+        o.users.push(data);
       });
     },
     get: function(id){
@@ -56,7 +68,6 @@ app.factory('users', ['$http', function($http){
         return res.data;
       });
     },
-
   };
   return o;
 }]);
@@ -79,8 +90,8 @@ app.config([ '$stateProvider', '$urlRouterProvider', function($stateProvider, $u
       templateUrl: '/user.html',
       controller: 'UserCtrl',
       resolve: {
-        user: ['$stateParams', 'users', function($stateParams, users){ 
-	  return users.get($stateParams.id);
+        userPromise: ['$stateParams', 'user', function($stateParams, user){  //TODO: DRY? (see below)
+	  return user.get($stateParams.id);
 	}]
       },
     })
@@ -89,11 +100,12 @@ app.config([ '$stateProvider', '$urlRouterProvider', function($stateProvider, $u
       templateUrl: '/edit.html',
       controller: 'EditUserCtrl',
       resolve: {
-        user: ['$stateParams', 'users', function($stateParams, users){ 
-	  return users.get($stateParams.id);
+        userPromise: ['$stateParams', 'user', function($stateParams, user){ //TODO: DRY? (see above)
+	  return user.get($stateParams.id);
 	}]
       },
     });
 
   $urlRouterProvider.otherwise('home');
+
 }]);
