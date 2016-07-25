@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
   
   //TODO: Google mongoose `setDefaultOnInsert` option; it describes behavior which might allow us to retroactively update old documents with new fields in the LiftsSchema
   // TODO: Or maybe google 'mongoose data migrations'...? talks about "schema changing" as the app "evolves" and such... this might be more specific to the behavior we want.
@@ -20,8 +22,8 @@ var mongoose = require('mongoose');
 
   var UserSchema = new mongoose.Schema({
     "name": {"type": String, "unique": true},
-    "hash": String, // does nothing yet
-    "salt": String, // does nothing yet
+    "hash": String, 
+    "salt": String, 
     "lifts": [LiftsSchema]
   });
 
@@ -32,6 +34,28 @@ var mongoose = require('mongoose');
     });
     cb();
   }
+
+  UserSchema.methods.setPassword = function(password){
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+  };
+
+  UserSchema.methods.validPassword = function(password){
+    var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+    return this.hash === hash;
+  };
+
+  UserSchema.methods.generateJWT = function(){
+    var today = new Date();
+    var exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+
+    return jwt.sign({
+      _id: this._id,
+      username: this.username,
+      exp: parseInt(exp.getTime() / 1000)
+    }, 'SECRET'); // TODO: Tutorial says to change this! "strongly recommended that you use an environment variable"
+  };
   
   // If a *new* user is created, then the user gets initiated with all of the below values. However, this does not update old users... yet?
   UserSchema.pre("save", function(next){ //TODO: Similar function for pre("save"..)? 

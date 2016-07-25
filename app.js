@@ -5,7 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
 require('./models/Users');
+require('./config/passport.js');
 
 mongoose.connect('mongodb://localhost/weights'); //the extension after 'localhost' will dictate which db we get our info from. The original tutorial was stored in 'localhost/news'. Changing this to e.g. 'localhost/poop' will end up rendering a website with no existing posts
 
@@ -25,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 app.use('/', routes);
 //app.use('/users', users);
