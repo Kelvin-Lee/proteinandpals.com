@@ -19,3 +19,6 @@ npm-debug.log
 
 # index.html (used only for syntax highlighting in VIM)
 views/index.html
+
+# ./bin/www
+bin
