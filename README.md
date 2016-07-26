@@ -2,13 +2,13 @@
 
 A weight lifting stats board for me and my friends.
 
-## ~~Starting and ~~Viewing the App
+## ~~Starting and~~ Viewing the App
 
-~~Once you have the repo on your machine, you can change directories (`cd`) into the repo, and then type and `enter` the following commands:
-- `mongod` (This opens up the database or something like that)
-- `npm start` (This will instruct `npm` to automatically find the entry point into our app).
+~~Once you have the repo on your machine, you can change directories (`cd`) into the repo, and then type and `enter` the following commands:~~
+~~- `mongod` (This opens up the database or something like that)~~
+~~- `npm start` (This will instruct `npm` to automatically find the entry point into our app).~~
 
-The app should then be viewable in your browser by typing in and navigating to `localhost:3000`.~~
+~~The app should then be viewable in your browser by typing in and navigating to `localhost:3000`.~~
 
 Anyone may now view the app at [proteinandpals.com](proteinandpals.com)! Feel free to leave your own numbers! :muscle:
 
