@@ -10,7 +10,7 @@ A weight lifting stats board for me and my friends.
 
 ~~The app should then be viewable in your browser by typing in and navigating to `localhost:3000`.~~
 
-Anyone may now view the app at [proteinandpals.com](http://www.proteinandpals.com)! Feel free to leave your own numbers! :muscle:
+Anyone may now view the app at [proteinandpals.com](http://proteinandpals.com) (as long as the server is up and I'm not testing on it). Feel free to leave your own numbers! :muscle:
 
 ## Notes
 - The original codebase of this repository was basically a fork of my `thinkster` repository, which itself closely follows [this tutorial] (https://thinkster.io/mean-stack-tutorial) on how to create a MEAN stack web application. Thus, the original codebase closely resembles the result of that tutorial.
